@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.stream.IntStream;
 
 public class TapeEquilibrium {
     /*
@@ -46,24 +44,21 @@ N is an integer within the range [2..100,000];
 each element of array A is an integer within the range [−1,000..1,000].
      */
     public int solution(int[] A) {
-        int sum = 0;
         int init = 0;
-        int minSum = 0;
-        int i;
-        List<Integer> list = new ArrayList<>();
-        for (int value = 0; value < A.length-1; value++) {
-            init += A[value];
-            for (i = 1; i < A.length-1; i++) {
-                sum += A[i];
+        int sum = IntStream.of(A).sum();
+        int minSum = sum;
+
+        for (int j = 0; j < A.length-1; j++) {
+
+            init += A[j];
+
+            int diff = Math.abs(init - (sum - init));
+            if (j == 0) {
+                minSum = diff;
             }
-            i++;
-            list.add(Math.abs(init - sum));
-            sum=0;
+            minSum = Math.min(minSum, diff);
         }
 
-        for (int x = 0; x < list.size(); x++) {
-            minSum = list.stream().mapToInt(v->v).min().orElseThrow(NoSuchElementException::new);
-        }
 
         return minSum;
 
